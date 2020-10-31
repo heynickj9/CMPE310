@@ -1,0 +1,133 @@
+main start:
+	Initialize Stuff:
+		readline buffer [1024 bytes]
+		float counter
+		int counter
+		number counter
+		float array [1000]
+		int array[1000]
+		sum_of_integers [float]
+		min float
+		max float
+		initialize fpu
+
+  GetInputFile
+	ParseFile:
+	  call readline
+		number counter = parseint(readline buffer)
+		for i = 0->number counter:
+		    call readline
+				parsenum(readline buffer)
+  Sumintegers:
+	  fldz
+		for i = 0->int counter:
+		  fild int array[i]
+			faddp st1
+		fst sum_of_integers
+
+  FindFloatMinMax
+		tbd
+  WriteIntfile
+		for i=0->int counter:
+				call printf "%d"
+  WriteFloatfile
+		for i=0->int counter:
+				call printf "%f"
+  PrintStats
+	  call printf "Min float:%f\n" min float
+	  call printf "Max float:%f\n" max float
+	  call printf "Sum of integers:%f\n" int su,
+
+
+readline:
+  for i =0:
+	  readbyte:
+				read (fd, readline buffer + i, 1)
+				cmp readlinebuffer [i], '\n'
+				je wrap_up_line
+				inc i
+				jne readline:
+   wrap_up_line:
+     readline buffer [i] = 0
+     ret
+
+
+parseint (inbuffer):
+
+		neg_flag = false
+		sum=0
+		for i=0:
+		  loop_head:
+				cur_char = inbuffer[i]
+				cmp cur_char 0
+				je parse_int_end
+				cmp cur_char '+'
+				  je loop_end
+				cmp cur_char '-'
+				jne postneg
+						set_neg_flag
+						jmp loop_end
+				postneg
+				  cur_char -= '0'
+					sum = sum*10
+					sum += cur_char
+				loop_end
+				  inc i
+					jmp loop_head
+
+		parse_int_end:
+		cmp neg_flag
+		jnz parse_int_real_done:
+		   neg sum
+		parse_int_real_done
+		mov eax, sum
+		ret
+
+test_for_float (inbuffer):
+		ret_val = false
+		for i = 0:
+		  test_for_float_loop_head:
+					cmp inbuffer+i, 0
+					je test_for_float_end
+					cmp inbuffer+i, 'E'
+					je set_flag
+					cmp inbuffer+i, '.'
+					je set_flag
+					inc i
+					jmp test_for_float_loop_head
+					set_flag:
+					ret_val =true
+					inc i
+					jmp test_for_float_loop_head
+
+		test_for_float_end:
+		mov eax, false
+		return
+
+parsefloat(inbuffer)
+		scan for e, parseint val after E
+		load significand, counter for place to div by 10 to add to in fpu
+
+parsenum(inbuffer):
+  test_for_float(inbuffer)
+	cmp eax, true
+	je prasenum_parsefloat
+	int_res = parseint(inbuffer)
+	int array[intcount] = int_res
+	inc intcount
+	j parsenum_end
+	float_res = parsenum_parsefloat(inbuffer)
+	float array[float count] = float_res
+	inc floatcount
+	parseflost(inbuffer)
+	parsenum_end:
+	ret
+
+	
+
+   
+
+
+
+
+
